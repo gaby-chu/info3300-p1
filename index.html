@@ -45,7 +45,7 @@
 
       const createCircle = (circleRad) => {};
 
-      d3.csv("clean_final.csv", d3.autotype).then((data) => {
+      d3.csv("clean_final_v2.csv", d3.autotype).then((data) => {
         const languageScale = d3
           .scaleOrdinal()
           .domain(data, (d) => d.language)
