@@ -37,18 +37,26 @@
         .domain([-1, 1])
         .range([chartHeight, 0]);
 
-      const languageScale = d3
-        .scaleOrdinal()
-        .domain(["en", "es", "idk", "de"])
-        .range(["red", "orange", "yellow", "green"]);
-
       let chartArea = svg
         .append("g")
         .attr("id", "points")
         .attr("transform", `translate(${margin.left},${margin.top})`);
       let annotations = svg.append("g").attr("id", "annotations");
 
+      const createCircle = (circleRad) => {};
+
       d3.csv("final.csv", d3.autotype).then((data) => {
+        const languageScale = d3
+          .scaleOrdinal()
+          .domain(data, (d) => d.language)
+          .range(["red", "orange", "yellow", "green"]);
+
+        const circleRadScale = d3
+          .scaleLinear()
+          .domain([-500, 500])
+          .range([0, 10]);
+
+        // Languages (bottom axis)
         const languages = d3.map(data, (d) => d.language);
         const languageChartScale = d3
           .scaleBand()
@@ -84,6 +92,17 @@
           );
         bottomAxis.scale(languageChartScale);
         bottomAxisG.transition().call(bottomAxis);
+
+        // Circles (main data)
+        chartArea
+          .selectAll("circle")
+          .data(data, (d) => d.score)
+          .join("circle")
+          .attr("class", "pop")
+          .attr("r", (d) => circleRadScale(d.counter))
+          .attr("fill", "blue")
+          .attr("cx", (d) => languageChartScale(d.language))
+          .attr("cy", (d) => languageScoreScale(d.score));
       });
     </script>
   </body>
