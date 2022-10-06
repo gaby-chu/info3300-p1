@@ -54,6 +54,12 @@
           .domain(["en", "es", "idk", "de"])
           .range(["red", "orange", "yellow", "green"]);
 
+        
+        const lineScale = d3
+          .scaleLinear()
+          .domain([-1,1])
+          .range([chartHeight, 0]);
+
         let leftAxis = d3.axisLeft(languageScoreScale);
 
         let bottomAxis = d3.axisBottom(languageScale);
