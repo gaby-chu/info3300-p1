@@ -1,0 +1,44 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project 1</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+      .gridlines .domain {
+        display: none;
+      }
+
+      .gridlines line {
+        stroke: rgb(195, 189, 189);
+      }
+    </style>
+  </head>
+  <h3>title</h3>
+  <body>
+    <svg
+      id="queen"
+      height="400"
+      width="800"
+      style="background-color: black"
+    ></svg>
+
+    <script>
+      const svg = d3.select("svg#queen");
+      const margin = { top: 10, right: 10, bottom: 30, left: 60 };
+      const width = svg.attr("width");
+      const height = svg.attr("height");
+      const chartWidth = width - margin.left - margin.right;
+      const chartHeight = height - margin.top - margin.bottom;
+
+      let chartArea = svg
+        .append("g")
+        .attr("id", "points")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+      let annotations = svg.append("g").attr("id", "annotations");
+
+      d3.csv("tweet_data.csv", d3.autotype).then((data) => {});
+    </script>
+  </body>
+</html>
