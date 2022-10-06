@@ -13,9 +13,13 @@
       .gridlines line {
         stroke: rgb(195, 189, 189);
       }
+      /* .axis{
+        stroke:black;
+      } */
+    
     </style>
   </head>
-  <h3>title</h3>
+  <h3>Sentiments Rating for Tweets after Queen Elizabeth II's Death (by language)</h3>
   <body>
     <svg
       id="queen"
@@ -45,10 +49,10 @@
 
       const createCircle = (circleRad) => {};
 
-      d3.csv("clean_final_new.csv", d3.autotype).then((data) => {
+      d3.csv("clean_final_v3.csv", d3.autotype).then((data) => {
         const languageScale = d3
           .scaleOrdinal()
-          .domain(data, (d) => d.language)
+          .domain(data, (d) => d.language_full)
           .range([
             "#fbb4ae",
             "#b3cde3",
@@ -72,7 +76,7 @@
           .range([0, 10]);
 
         // Languages (bottom axis)
-        const languages = d3.map(data, (d) => d.language);
+        const languages = d3.map(data, (d) => d.language_full);
         const languageChartScale = d3
           .scaleBand()
           .domain(languages)
@@ -100,6 +104,9 @@
 
         //   Bottom axis
         let bottomAxis = d3.axisBottom();
+
+        let bottomGridlines = d3.axisBottom(languageChartScale).tickSize(-chartHeight-10).tickFormat("");
+
         let bottomAxisG = annotations
           .append("g")
           .attr("class", "x axis")
@@ -107,6 +114,13 @@
             "transform",
             `translate(${margin.left},${chartHeight + margin.top + 10})`
           );
+          
+        annotations.append("g")
+              .attr("class", "x gridlines")
+              .attr("transform",`translate(${margin.left},${chartHeight+margin.top +10})`)
+              .call(bottomGridlines);
+
+
         bottomAxis.scale(languageChartScale);
         bottomAxisG.transition().call(bottomAxis);
 
@@ -117,8 +131,8 @@
           .join("circle")
           .attr("class", "pop")
           .attr("r", (d) => circleRadScale(d.normalized))
-          .attr("fill", "blue")
-          .attr("cx", (d) => languageChartScale(d.language))
+          .attr("fill", (d) => languageScale(d.language_full))
+          .attr("cx", (d) => languageChartScale(d.language_full))
           .attr("cy", (d) => languageScoreScale(d.score));
       });
     </script>
