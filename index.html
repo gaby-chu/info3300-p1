@@ -38,7 +38,9 @@
         .attr("transform", `translate(${margin.left},${margin.top})`);
       let annotations = svg.append("g").attr("id", "annotations");
 
-      d3.csv("tweet_data.csv", d3.autotype).then((data) => {});
+      d3.csv("tweet_data.csv", d3.autotype).then((data) => {
+        console.log(data[0]);
+      });
     </script>
   </body>
 </html>
