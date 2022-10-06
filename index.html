@@ -6,6 +6,9 @@
     <title>Project 1</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
+      h3, text{
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+      }
       .gridlines .domain {
         display: none;
       }
@@ -13,10 +16,11 @@
       .gridlines line {
         stroke: rgb(195, 189, 189);
       }
-      /* .axis{
-        stroke:black;
-      } */
-    
+      .axis .tick text{
+        color:#806038;
+        transform: rotate(-45);
+      }
+
     </style>
   </head>
   <h3>Sentiments Rating for Tweets after Queen Elizabeth II's Death (by language)</h3>
