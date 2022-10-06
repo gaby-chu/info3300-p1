@@ -41,7 +41,7 @@
 
       d3.csv("tweet_data.csv", d3.autotype).then((data) => {
 
-        const polarityExtent = d3.extent(data, d=> d['positive_score']);
+        const polarityExtent = d3.extent(data, d=> d['compound_score']); 
 
         const lineScale = d3.scaleLinear().domain(polarityExtent).range([chartHeight, 0]);
 
@@ -60,7 +60,7 @@
             .attr("class", "y gridlines")
             .attr("transform", `translate(${margin.left - 10},${margin.top})`)
             .call(leftGridlines);
-            
+
         console.log(data[0]);
         //blah
       });
