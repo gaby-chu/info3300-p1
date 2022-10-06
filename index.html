@@ -32,6 +32,11 @@
       const chartWidth = width - margin.left - margin.right;
       const chartHeight = height - margin.top - margin.bottom;
 
+      const languageScoreScale = d3
+        .scaleLinear()
+        .domain([-1, 1])
+        .range([chartHeight, 0]);
+
       let chartArea = svg
         .append("g")
         .attr("id", "points")
