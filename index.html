@@ -44,7 +44,23 @@
         const polarityExtent = d3.extent(data, d=> d['positive_score']);
 
         const lineScale = d3.scaleLinear().domain(polarityExtent).range([chartHeight, 0]);
-        
+
+        let leftAxis = d3.axisLeft(lineScale);
+
+        let leftGridlines = d3.axisLeft(lineScale)
+                .tickSize(-chartWidth-10)
+                .tickFormat("");
+
+        annotations.append("g")
+            .attr("class", "axis")
+            .attr("transform", `translate(${margin.left -10 },${margin.top})`)
+            .call(leftAxis);
+
+        annotations.append("g")
+            .attr("class", "y gridlines")
+            .attr("transform", `translate(${margin.left - 10},${margin.top})`)
+            .call(leftGridlines);
+            
         console.log(data[0]);
       });
     </script>
