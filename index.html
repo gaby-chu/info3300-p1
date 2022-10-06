@@ -37,6 +37,11 @@
         .domain([-1, 1])
         .range([chartHeight, 0]);
 
+      const languageScale = d3
+        .scaleOrdinal()
+        .domain(["en", "es", "idk", "de"])
+        .range(["red", "orange", "yellow", "green"]);
+
       let chartArea = svg
         .append("g")
         .attr("id", "points")
@@ -44,54 +49,41 @@
       let annotations = svg.append("g").attr("id", "annotations");
 
       d3.csv("final.csv", d3.autotype).then((data) => {
-        // const lineScale = d3
-        //   .scaleLinear()
-        //   .domain(polarityExtent)
-        //   .range([chartHeight, 0]);
+        const languages = d3.map(data, (d) => d.language);
+        const languageChartScale = d3
+          .scaleBand()
+          .domain(languages)
+          .range([0, chartWidth])
+          .padding(0.05);
 
-        const languageScale = d3
-          .scaleOrdinal()
-          .domain(["en", "es", "idk", "de"])
-          .range(["red", "orange", "yellow", "green"]);
-
-        
-        const lineScale = d3
-          .scaleLinear()
-          .domain([-1,1])
-          .range([chartHeight, 0]);
-
+        // Left axis
         let leftAxis = d3.axisLeft(languageScoreScale);
-
-        let bottomAxis = d3.axisBottom(languageScale);
-
         let leftGridlines = d3
           .axisLeft(languageScoreScale)
           .tickSize(-chartWidth - 10)
           .tickFormat("");
-
         annotations
           .append("g")
           .attr("class", "axis")
           .attr("transform", `translate(${margin.left - 10},${margin.top})`)
           .call(leftAxis);
-
         annotations
           .append("g")
           .attr("class", "y gridlines")
           .attr("transform", `translate(${margin.left - 10},${margin.top})`)
           .call(leftGridlines);
 
-        annotations
+        //   Bottom axis
+        let bottomAxis = d3.axisBottom();
+        let bottomAxisG = annotations
           .append("g")
-          .attr("class", "axis")
+          .attr("class", "x axis")
           .attr(
             "transform",
             `translate(${margin.left},${chartHeight + margin.top + 10})`
-          )
-          .call(bottomAxis);
-
-        console.log(data[0]);
-        //blah
+          );
+        bottomAxis.scale(languageChartScale);
+        bottomAxisG.transition().call(bottomAxis);
       });
     </script>
   </body>
