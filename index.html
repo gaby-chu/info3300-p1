@@ -43,28 +43,32 @@
         .attr("transform", `translate(${margin.left},${margin.top})`);
       let annotations = svg.append("g").attr("id", "annotations");
 
-
       d3.csv("tweet_data.csv", d3.autotype).then((data) => {
+        const polarityExtent = d3.extent(data, (d) => d["compound_score"]);
 
-        const polarityExtent = d3.extent(data, d=> d['compound_score']); 
+        const lineScale = d3
+          .scaleLinear()
+          .domain(polarityExtent)
+          .range([chartHeight, 0]);
 
-        const lineScale = d3.scaleLinear().domain(polarityExtent).range([chartHeight, 0]);
+        let leftAxis = d3.axisLeft(languageScoreScale);
 
-        let leftAxis = d3.axisLeft(lineScale);
+        let leftGridlines = d3
+          .axisLeft(lineScale)
+          .tickSize(-chartWidth - 10)
+          .tickFormat("");
 
-        let leftGridlines = d3.axisLeft(lineScale)
-                .tickSize(-chartWidth-10)
-                .tickFormat("");
+        annotations
+          .append("g")
+          .attr("class", "axis")
+          .attr("transform", `translate(${margin.left - 10},${margin.top})`)
+          .call(leftAxis);
 
-        annotations.append("g")
-            .attr("class", "axis")
-            .attr("transform", `translate(${margin.left -10 },${margin.top})`)
-            .call(leftAxis);
-
-        annotations.append("g")
-            .attr("class", "y gridlines")
-            .attr("transform", `translate(${margin.left - 10},${margin.top})`)
-            .call(leftGridlines);
+        annotations
+          .append("g")
+          .attr("class", "y gridlines")
+          .attr("transform", `translate(${margin.left - 10},${margin.top})`)
+          .call(leftGridlines);
 
         console.log(data[0]);
         //blah
