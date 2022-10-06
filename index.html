@@ -43,9 +43,7 @@
         .attr("transform", `translate(${margin.left},${margin.top})`);
       let annotations = svg.append("g").attr("id", "annotations");
 
-      d3.csv("tweet_data.csv", d3.autotype).then((data) => {
-        const polarityExtent = d3.extent(data, (d) => d["compound_score"]);
-
+      d3.csv("final.csv", d3.autotype).then((data) => {
         const lineScale = d3
           .scaleLinear()
           .domain(polarityExtent)
