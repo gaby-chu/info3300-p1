@@ -16,9 +16,9 @@
       .gridlines line {
         stroke: rgb(195, 189, 189);
       }
-      .axis .tick text{
-        color:#806038;
-        transform: rotate(-45);
+      .x .tick text{
+         transform: rotate(50deg);
+
       }
 
     </style>
@@ -27,8 +27,8 @@
   <body>
     <svg
       id="queen"
-      height="400"
-      width="800"
+      height="800"
+      width="1200"
       style="background-color: white"
     ></svg>
 
@@ -62,11 +62,11 @@
             "#b3cde3",
             "#ccebc5",
             "#decbe4",
-            "#fed9a6",
-            "#ffffcc",
+            "#999796",
+            "#5CAC5F",
             "#e5d8bd",
             "#fddaec",
-            "#f2f2f2",
+            "#DE95CF",
           ]);
 
         const circleRadScale = d3
@@ -80,7 +80,7 @@
           .range([0, 10]);
 
         // Languages (bottom axis)
-        const languages = d3.map(data, (d) => d.language_full);
+        const languages = d3.map(data, (d) => d.language);
         const languageChartScale = d3
           .scaleBand()
           .domain(languages)
@@ -109,7 +109,9 @@
         //   Bottom axis
         let bottomAxis = d3.axisBottom();
 
-        let bottomGridlines = d3.axisBottom(languageChartScale).tickSize(-chartHeight-10).tickFormat("");
+        let bottomGridlines = d3.axisBottom(languageChartScale)
+                    .tickSize(-chartHeight-10)
+                    .tickFormat("");
 
         let bottomAxisG = annotations
           .append("g")
@@ -119,9 +121,12 @@
             `translate(${margin.left},${chartHeight + margin.top + 10})`
           );
           
+          
         annotations.append("g")
               .attr("class", "x gridlines")
-              .attr("transform",`translate(${margin.left},${chartHeight+margin.top +10})`)
+             
+              .attr('transform', `translate(${margin.left},${chartHeight+margin.top +10})`)
+             
               .call(bottomGridlines);
 
 
@@ -135,8 +140,8 @@
           .join("circle")
           .attr("class", "pop")
           .attr("r", (d) => circleRadScale(d.normalized))
-          .attr("fill", (d) => languageScale(d.language_full))
-          .attr("cx", (d) => languageChartScale(d.language_full))
+          .attr("fill", (d) => languageScale(d.language))
+          .attr("cx", (d) => languageChartScale(d.language))
           .attr("cy", (d) => languageScoreScale(d.score));
       });
     </script>
