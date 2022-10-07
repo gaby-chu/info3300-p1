@@ -16,14 +16,16 @@
       .gridlines line {
         stroke: rgb(195, 189, 189);
       }
-      .x .tick text{
-         transform: rotate(50deg);
-
-      }
+     h3 {
+      text-align: center;
+      font-size: 30px;
+     }
+    
+  
 
     </style>
   </head>
-  <h3>Sentiments Rating for Tweets after Queen Elizabeth II's Death (by language)</h3>
+  <h3>Sentiments Rating for Tweets after Queen Elizabeth II's Death by Language</h3>
   <body>
     <svg
       id="queen"
@@ -34,7 +36,7 @@
 
     <script>
       const svg = d3.select("svg#queen");
-      const margin = { top: 10, right: 10, bottom: 30, left: 60 };
+      const margin = { top: 30, right: 10, bottom: 200, left: 100 };
       const width = svg.attr("width");
       const height = svg.attr("height");
       const chartWidth = width - margin.left - margin.right;
@@ -50,6 +52,7 @@
         .attr("id", "points")
         .attr("transform", `translate(${margin.left},${margin.top})`);
       let annotations = svg.append("g").attr("id", "annotations");
+                
 
       const createCircle = (circleRad) => {};
 
@@ -80,7 +83,7 @@
           .range([0, 10]);
 
         // Languages (bottom axis)
-        const languages = d3.map(data, (d) => d.language);
+        const languages = d3.map(data, (d) => d.language_full);
         const languageChartScale = d3
           .scaleBand()
           .domain(languages)
@@ -98,7 +101,12 @@
           .append("g")
           .attr("class", "axis")
           .attr("transform", `translate(${margin.left - 10},${margin.top})`)
-          .call(leftAxis);
+          .call(leftAxis)
+          .selectAll("text")
+                    .style("text-anchor", "end")
+                    .attr("font-size", 14);
+                    
+                    
 
         annotations
           .append("g")
@@ -131,7 +139,14 @@
 
 
         bottomAxis.scale(languageChartScale);
-        bottomAxisG.transition().call(bottomAxis);
+        bottomAxisG.transition()
+                    .call(bottomAxis)
+                    .selectAll("text")
+                    .style("text-anchor", "end")
+                    .attr("font-size", 16)
+                    .attr("dx", "-.8em")
+                    .attr("dy", ".15em")
+                    .attr("transform", "rotate(-60)");
 
         // Circles (main data)
         chartArea
@@ -140,10 +155,36 @@
           .join("circle")
           .attr("class", "pop")
           .attr("r", (d) => circleRadScale(d.normalized))
-          .attr("fill", (d) => languageScale(d.language))
-          .attr("cx", (d) => languageChartScale(d.language))
+          .attr("fill", (d) => languageScale(d.language_full))
+          .attr("cx", (d) => languageChartScale(d.language_full)+19)
           .attr("cy", (d) => languageScoreScale(d.score));
       });
+      // x axis label
+      svg.append("text")
+        .attr("class", "x label")
+        .attr("text-anchor", "start")
+        .attr("x", width/2)
+        .attr("y", height-50)
+        .attr("font-size", 23)
+        .text("Language");
+
+        // y axis label
+      svg.append("text")
+        .attr("class", "y label")
+        .attr("text-anchor", "start")
+        .attr('y', 15)
+        .attr('dy', '1em')
+        .attr('x', 0 - (height/2))
+        .attr("font-size", 23)
+        .attr("transform", "rotate(-90)")
+        .text("Sentiment Score");
+
+      
+
+
+      chartArea.raise();
+      
     </script>
+    
   </body>
 </html>
