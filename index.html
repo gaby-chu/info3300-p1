@@ -7,6 +7,20 @@
   <title>Project 1</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
+    figure{
+      display:flex;
+      flex-direction: row;
+      width: 1160px;
+    }
+    img{
+      flex-grow:1;
+    }
+    p {
+      flex-grow:1;
+      font-size: 20px;
+      font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    }
+
     h3,
     text {
       font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
@@ -19,12 +33,43 @@
     .gridlines line {
       stroke: rgb(195, 189, 189);
     }
+    figure{
+      background-color:rgb(223, 239, 239);
+      
+    }
+    img{
+      margin: 20 20 20 20 ;
+    }
+    p{
+      margin: 20 20 20 20 ;
+    }
 
   </style>
 </head>
 
 <body>
-  <svg id="queen" height="800" width="1200" style="background-color: white"></svg>
+
+  <figure>
+    <img src="download.jpeg">
+  </img>
+  <p>Elizabeth II, born on April 21st 1926, was the Queen of the United Kingdom 
+    and other Commonwealth realms from February 1952 until her death in 2022. 
+    Her 70 year long reign marked the longest of any British monarch in history.
+
+    <br/>
+    <br/>
+
+      Her death sparked comments from all over the world, especially across different social 
+    media platforms. In particular, the news of her passing trended on Twitter for 
+    several days, signifying the impact that her rule had on the world. We decided to 
+    analyze the sentiments of such tweets, in particular on the day directly after her passing 
+    (September 9th). Below is a graph of the sentiment scores, measured through VADER's polarity scoring,
+    grouped by the language in which they were tweeted.
+    </p>
+  </figure>
+
+
+  <svg id="queen" class="container" height="800" width="1200" style="background-color: none"></svg>
 
   <script>
     const svg = d3.select("svg#queen");
@@ -97,8 +142,6 @@
         .selectAll("text")
         .style("text-anchor", "end")
         .attr("font-size", 14);
-
-
 
       annotations
         .append("g")
@@ -178,9 +221,6 @@
       .attr("text-anchor", "middle")
       .attr("font-size", 24)
       .text("Sentiment Ratings on Twitter by Language After Queen Elizabeth II's Death");
-
-
-
 
     chartArea.raise();
 
