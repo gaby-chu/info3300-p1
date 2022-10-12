@@ -1,231 +1,291 @@
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project 1</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+      body {
+        background-color: darkred;
+      }
+      figure {
+        display: flex;
+        flex-direction: row;
+        width: 1160px;
+      }
+      img {
+        flex-grow: 1;
+      }
+      p {
+        flex-grow: 1;
+        font-size: 20px;
+        font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+          "Lucida Sans", Arial, sans-serif;
+        color: darkgreen;
+      }
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Project 1</title>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <style>
-    figure{
-      display:flex;
-      flex-direction: row;
-      width: 1160px;
-    }
-    img{
-      flex-grow:1;
-    }
-    p {
-      flex-grow:1;
-      font-size: 20px;
-      font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    }
+      h3,
+      text {
+        font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+          "Lucida Sans", Arial, sans-serif;
+        color: purple;
+      }
 
-    h3,
-    text {
-      font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    }
+      .gridlines .domain {
+        display: none;
+      }
 
-    .gridlines .domain {
-      display: none;
-    }
+      .gridlines line {
+        stroke: rgb(195, 189, 189);
+      }
+      figure {
+        background-color: rgb(223, 239, 239);
+      }
+      img {
+        margin: 20 20 20 20;
+      }
+      p {
+        margin: 20 20 20 20;
+      }
+    </style>
+  </head>
 
-    .gridlines line {
-      stroke: rgb(195, 189, 189);
-    }
-    figure{
-      background-color:rgb(223, 239, 239);
-      
-    }
-    img{
-      margin: 20 20 20 20 ;
-    }
-    p{
-      margin: 20 20 20 20 ;
-    }
+  <body>
+    <figure>
+      <img src="download.jpeg" />
+      <p>
+        Elizabeth II, born on April 21st 1926, was the Queen of the United
+        Kingdom and other Commonwealth realms from February 1952 until her death
+        in 2022. Her 70 year long reign marked the longest of any British
+        monarch in history.
 
-  </style>
-</head>
+        <br />
+        <br />
 
-<body>
+        Her death sparked comments from all over the world, especially across
+        different social media platforms. In particular, the news of her passing
+        trended on Twitter for several days, signifying the impact that her rule
+        had on the world. We decided to analyze the sentiments of such tweets,
+        in particular on the day directly after her passing (September 9th).
+        Below is a graph of the sentiment scores, measured through VADER's
+        polarity scoring, grouped by the language in which they were tweeted.
+      </p>
+    </figure>
 
-  <figure>
-    <img src="download.jpeg">
-  </img>
-  <p>Elizabeth II, born on April 21st 1926, was the Queen of the United Kingdom 
-    and other Commonwealth realms from February 1952 until her death in 2022. 
-    Her 70 year long reign marked the longest of any British monarch in history.
+    <svg
+      id="queen"
+      class="container"
+      height="800"
+      width="1200"
+      style="background-color: none"
+    ></svg>
 
-    <br/>
-    <br/>
+    <script>
+      const svg = d3.select("svg#queen");
+      const margin = { top: 80, right: 5, bottom: 200, left: 100 };
+      const width = svg.attr("width");
+      const height = svg.attr("height");
+      const chartWidth = width - margin.left - margin.right;
+      const chartHeight = height - margin.top - margin.bottom;
 
-      Her death sparked comments from all over the world, especially across different social 
-    media platforms. In particular, the news of her passing trended on Twitter for 
-    several days, signifying the impact that her rule had on the world. We decided to 
-    analyze the sentiments of such tweets, in particular on the day directly after her passing 
-    (September 9th). Below is a graph of the sentiment scores, measured through VADER's polarity scoring,
-    grouped by the language in which they were tweeted.
-    </p>
-  </figure>
-
-
-  <svg id="queen" class="container" height="800" width="1200" style="background-color: none"></svg>
-
-  <script>
-    const svg = d3.select("svg#queen");
-    const margin = { top: 80, right: 5, bottom: 200, left: 100 };
-    const width = svg.attr("width");
-    const height = svg.attr("height");
-    const chartWidth = width - margin.left - margin.right;
-    const chartHeight = height - margin.top - margin.bottom;
-
-    const languageScoreScale = d3
-      .scaleLinear()
-      .domain([-1, 1])
-      .range([chartHeight, 0]);
-
-    let chartArea = svg
-      .append("g")
-      .attr("id", "points")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
-    let annotations = svg.append("g").attr("id", "annotations");
-
-
-    const createCircle = (circleRad) => { };
-
-    d3.csv("clean_final_v3.csv", d3.autotype).then((data) => {
-      const languageScale = d3
-        .scaleOrdinal()
-        .domain(data, (d) => d.language_full)
-        .range([
-          "#fbb4ae",
-          "#b3cde3",
-          "#ccebc5",
-          "#decbe4",
-          "#999796",
-          "#5CAC5F",
-          "#e5d8bd",
-          "#fddaec",
-          "#DE95CF",
-        ]);
-
-      const circleRadScale = d3
-        .scaleLog()
-        .domain([1e-6, 34621])
-        .range([0, 20]);
-
-      const circleRadLinScale = d3
+      const languageScoreScale = d3
         .scaleLinear()
-        .domain([0, 1])
-        .range([0, 10]);
+        .domain([-1, 1])
+        .range([chartHeight, 0]);
 
-      // Languages (bottom axis)
-      const languages = d3.map(data, (d) => d.language_full);
-      const languageChartScale = d3
-        .scaleBand()
-        .domain(languages)
-        .range([0, chartWidth])
-        .padding(0.05);
-
-      // Left axis
-      let leftAxis = d3.axisLeft(languageScoreScale);
-      let leftGridlines = d3
-        .axisLeft(languageScoreScale)
-        .tickSize(-chartWidth - 10)
-        .tickFormat("");
-
-      annotations
+      let chartArea = svg
         .append("g")
-        .attr("class", "axis")
-        .attr("transform", `translate(${margin.left - 10},${margin.top})`)
-        .call(leftAxis)
-        .selectAll("text")
-        .style("text-anchor", "end")
-        .attr("font-size", 14);
+        .attr("id", "points")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+      let annotations = svg.append("g").attr("id", "annotations");
 
-      annotations
-        .append("g")
-        .attr("class", "y gridlines")
-        .attr("transform", `translate(${margin.left - 10},${margin.top})`)
-        .call(leftGridlines);
+      const createCircle = (circleRad) => {};
 
-      //   Bottom axis
-      let bottomAxis = d3.axisBottom();
+      d3.csv("clean_final_v3.csv", d3.autotype).then((data) => {
+        let languageList = [];
+        data.forEach((d) => {
+          if (!languageList.includes(d.language_full)) {
+            languageList.push(d.language_full);
+          }
+        });
+        let languageDict = {};
+        data.forEach((d) => {
+          if (!languageDict[d.language_full]) {
+            languageDict[d.language_full] = [[d.score, d.counter]];
+          } else {
+            let tempList = languageDict[d.language_full];
+            languageDict[d.language_full].push([d.score, d.counter]);
+          }
+        });
 
-      let bottomGridlines = d3.axisBottom(languageChartScale)
-        .tickSize(-chartHeight - 10)
-        .tickFormat("");
+        let languageTotalsDict = {};
+        data.forEach((d) => {
+          if (!languageTotalsDict[d.language_full]) {
+            languageTotalsDict[d.language_full] = d.total_counter;
+          }
+        });
 
-      let bottomAxisG = annotations
-        .append("g")
-        .attr("class", "x axis")
-        .attr(
-          "transform",
-          `translate(${margin.left},${chartHeight + margin.top + 10})`
+        let languageMedDict = {};
+
+        for (const [key, value] of Object.entries(languageDict)) {
+          let totalScores = 0;
+          value.forEach((score) => {
+            totalScores += score[0] * score[1];
+          });
+          languageMedDict[key] = totalScores / languageTotalsDict[key];
+        }
+
+        const languageScale = d3
+          .scaleOrdinal()
+          .domain(data, (d) => d.language_full)
+          .range([
+            "#fbb4ae",
+            "#b3cde3",
+            "#ccebc5",
+            "#decbe4",
+            "#999796",
+            "#5CAC5F",
+            "#e5d8bd",
+            "#fddaec",
+            "#DE95CF",
+          ]);
+
+        const circleRadScale = d3
+          .scaleLog()
+          .domain([1e-6, 34621])
+          .range([0, 20]);
+
+        const circleRadLinScale = d3
+          .scaleLinear()
+          .domain([0, 1])
+          .range([0, 10]);
+
+        // Languages (bottom axis)
+        const languages = d3.map(data, (d) => d.language_full);
+        const languageChartScale = d3
+          .scaleBand()
+          .domain(languages)
+          .range([0, chartWidth])
+          .padding(0.05);
+
+        // Left axis
+        let leftAxis = d3.axisLeft(languageScoreScale);
+        let leftGridlines = d3
+          .axisLeft(languageScoreScale)
+          .tickSize(-chartWidth - 10)
+          .tickFormat("");
+
+        annotations
+          .append("g")
+          .attr("class", "axis")
+          .attr("transform", `translate(${margin.left - 10},${margin.top})`)
+          .call(leftAxis)
+          .selectAll("text")
+          .style("text-anchor", "end")
+          .attr("font-size", 14);
+
+        annotations
+          .append("g")
+          .attr("class", "y gridlines")
+          .attr("transform", `translate(${margin.left - 10},${margin.top})`)
+          .call(leftGridlines);
+
+        //   Bottom axis
+        let bottomAxis = d3.axisBottom();
+
+        let bottomGridlines = d3
+          .axisBottom(languageChartScale)
+          .tickSize(-chartHeight - 10)
+          .tickFormat("");
+
+        let bottomAxisG = annotations
+          .append("g")
+          .attr("class", "x axis")
+          .attr(
+            "transform",
+            `translate(${margin.left},${chartHeight + margin.top + 10})`
+          );
+
+        annotations
+          .append("g")
+          .attr("class", "x gridlines")
+
+          .attr(
+            "transform",
+            `translate(${margin.left},${chartHeight + margin.top + 10})`
+          )
+
+          .call(bottomGridlines);
+
+        bottomAxis.scale(languageChartScale);
+        bottomAxisG
+          .transition()
+          .call(bottomAxis)
+          .selectAll("text")
+          .style("text-anchor", "end")
+          .attr("font-size", 16)
+          .attr("dx", "-.8em")
+          .attr("dy", ".15em")
+          .attr("transform", "rotate(-60)");
+
+        // Circles (main data)
+        chartArea
+          .selectAll("circle")
+          .data(data, (d) => d.score)
+          .join("circle")
+          .attr("class", "pop")
+          .attr("r", (d) => circleRadScale(d.normalized))
+          .attr("fill", (d) => languageScale(d.language_full))
+          .attr("cx", (d) => languageChartScale(d.language_full) + 19)
+          .attr("cy", (d) => languageScoreScale(d.score));
+
+        console.log(Object.values(languageMedDict));
+
+        for (const [key, value] of Object.entries(languageMedDict)) {
+          chartArea
+            .append("circle")
+            .attr("class", "yourmom")
+            .attr("r", "4")
+            .attr("fill", "red")
+            .attr("cx", languageChartScale(key) + 19)
+            .attr("cy", languageScoreScale(value));
+        }
+      });
+      // x axis label
+      svg
+        .append("text")
+        .attr("class", "x label")
+        .attr("text-anchor", "start")
+        .attr("x", width / 2)
+        .attr("y", height - 50)
+        .attr("font-size", 23)
+        .text("Language");
+
+      // y axis label
+      svg
+        .append("text")
+        .attr("class", "y label")
+        .attr("text-anchor", "start")
+        .attr("y", 15)
+        .attr("dy", "1em")
+        .attr("x", 0 - height / 2)
+        .attr("font-size", 23)
+        .attr("transform", "rotate(-90)")
+        .text("Sentiment Score");
+
+      svg
+        .append("text")
+        .attr("class", "title")
+        .attr("x", width / 2)
+        .attr("y", height - 750)
+        .attr("text-anchor", "middle")
+        .attr("font-size", 24)
+        .text(
+          "Sentiment Ratings on Twitter by Language After Queen Elizabeth II's Death"
         );
 
-
-      annotations.append("g")
-        .attr("class", "x gridlines")
-
-        .attr('transform', `translate(${margin.left},${chartHeight + margin.top + 10})`)
-
-        .call(bottomGridlines);
-
-
-      bottomAxis.scale(languageChartScale);
-      bottomAxisG.transition()
-        .call(bottomAxis)
-        .selectAll("text")
-        .style("text-anchor", "end")
-        .attr("font-size", 16)
-        .attr("dx", "-.8em")
-        .attr("dy", ".15em")
-        .attr("transform", "rotate(-60)");
-
-      // Circles (main data)
-      chartArea
-        .selectAll("circle")
-        .data(data, (d) => d.score)
-        .join("circle")
-        .attr("class", "pop")
-        .attr("r", (d) => circleRadScale(d.normalized))
-        .attr("fill", (d) => languageScale(d.language_full))
-        .attr("cx", (d) => languageChartScale(d.language_full) + 19)
-        .attr("cy", (d) => languageScoreScale(d.score));
-    });
-    // x axis label
-    svg.append("text")
-      .attr("class", "x label")
-      .attr("text-anchor", "start")
-      .attr("x", width / 2)
-      .attr("y", height - 50)
-      .attr("font-size", 23)
-      .text("Language");
-
-    // y axis label
-    svg.append("text")
-      .attr("class", "y label")
-      .attr("text-anchor", "start")
-      .attr('y', 15)
-      .attr('dy', '1em')
-      .attr('x', 0 - (height / 2))
-      .attr("font-size", 23)
-      .attr("transform", "rotate(-90)")
-      .text("Sentiment Score");
-
-    svg.append("text")
-      .attr("class", "title")
-      .attr("x", width/2)
-      .attr("y", height-750)
-      .attr("text-anchor", "middle")
-      .attr("font-size", 24)
-      .text("Sentiment Ratings on Twitter by Language After Queen Elizabeth II's Death");
-
-    chartArea.raise();
-
-  </script>
-
-</body>
-
+      chartArea.raise();
+    </script>
+  </body>
 </html>
